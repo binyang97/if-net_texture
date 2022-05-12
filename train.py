@@ -1,9 +1,9 @@
-import models.local_model as model
-import models.dataloader as dataloader
-from models import training
+import if_net_texture.models.local_model as model
+import if_net_texture.models.dataloader as dataloader
+from if_net_texture.models import training
 import argparse
 import torch
-import config.config_loader as cfg_loader
+import if_net_texture.config.config_loader as cfg_loader
 
 parser = argparse.ArgumentParser(
     description='Train Model'

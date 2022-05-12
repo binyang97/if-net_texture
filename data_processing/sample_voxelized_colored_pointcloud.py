@@ -1,4 +1,4 @@
-import utils
+import if_net_texture.data_processing.utils
 from scipy.spatial import cKDTree as KDTree
 import numpy as np
 import trimesh
@@ -10,11 +10,10 @@ import argparse
 import random
 
 import sys
-sys.path.append(".")
-from config import config_loader as cfg_loader
+from if_net_texture.config import config_loader as cfg_loader
 import traceback
 import tqdm
-import utils
+import if_net_texture.data_processing.utils
 
 
 def voxelized_colored_pointcloud_sampling(tmp_path):
