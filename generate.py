@@ -1,13 +1,13 @@
-import models.local_model as model
-import models.dataloader as dataloader
+import if_net_texture.models.local_model as model
+import if_net_texture.models.dataloader as dataloader
 import numpy as np
 import argparse
-from models.generation import Generator
-import config.config_loader as cfg_loader
+from if_net_texture.models.generation import Generator
+import if_net_texture.config.config_loader as cfg_loader
 import os
 import trimesh
 import torch
-from data_processing import utils
+from if_net_texture.data_processing import utils
 from tqdm import tqdm
 
 

@@ -6,7 +6,7 @@ import os
 import multiprocessing as mp
 from multiprocessing import Pool
 import argparse
-import utils
+import if_net_texture.data_processing.utils
 import traceback
 import tqdm
 
