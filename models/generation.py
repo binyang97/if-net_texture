@@ -1,4 +1,4 @@
-import data_processing.utils as utils
+import if_net_texture.data_processing.utils as utils
 import trimesh
 import torch
 import os
