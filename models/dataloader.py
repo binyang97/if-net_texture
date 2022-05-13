@@ -12,7 +12,7 @@ import torch
 class VoxelizedDataset(Dataset):
 
 
-    def __init__(self, mode, cfg, generation = False, num_workers = 12):
+    def __init__(self, mode, cfg, generation = False, num_workers = 12,  world_size = 0,rank = -1, **kwargs):
 
         self.path = cfg['data_path']
         self.mode = mode
@@ -33,6 +33,9 @@ class VoxelizedDataset(Dataset):
         else:
             self.voxelized_pointcloud = True
             self.pointcloud_samples = cfg['input_points_number']
+
+        self.rank = rank # the number of gpu
+        self.world_size = world_size # the number of data assigned to each gpu
 
 
 
@@ -92,3 +95,6 @@ class VoxelizedDataset(Dataset):
         random_data = os.urandom(4)
         base_seed = int.from_bytes(random_data, byteorder="big")
         np.random.seed(base_seed + worker_id)
+    
+    def random_split(self, partition_index):
+        self.data = self.data[partition_index]
