@@ -33,10 +33,10 @@ def scale_back(parameters):
         return
 
     total_size = (mesh_partial.bounds[1] - mesh_partial.bounds[0]).max()
-    centers = (mesh_generation.bounds[1] + mesh_generation.bounds[0]) /2
+    centers = (mesh_partial.bounds[1] + mesh_partial.bounds[0]) /2
 
-    mesh_generation.apply_translation(-centers)
     mesh_generation.apply_scale(total_size)
+    mesh_generation.apply_translation(centers)
     
     mesh_generation.export(output_fullpath)
     print(f'Finished to scale back the output{output_fullpath}')
@@ -61,8 +61,7 @@ if __name__=='__main__':
 
         for i, generation_path in enumerate(generation_mesh_paths):
             params.append([partial_mesh_paths[i], generation_path])
-        
-        #print(params[0])
+
     else:
         raise 'The data preprocessing step is only for test set'
 
