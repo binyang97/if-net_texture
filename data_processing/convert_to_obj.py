@@ -28,6 +28,9 @@ def scale_back(parameters):
     mesh_partial = trimesh.load(partial_mesh_fullpath)
 
     output_fullpath = os.path.splitext(generation_mesh_fullpath)[0] + "_scaled_back" + ".obj"
+    if os.path.exists(output_fullpath):
+        print('File exists. Done.')
+        return
 
     total_size = (mesh_partial.bounds[1] - mesh_partial.bounds[0]).max()
     centers = (mesh_generation.bounds[1] + mesh_generation.bounds[0]) /2
@@ -59,7 +62,7 @@ if __name__=='__main__':
         for i, generation_path in enumerate(generation_mesh_paths):
             params.append([partial_mesh_paths[i], generation_path])
         
-        print(params[0])
+        #print(params[0])
     else:
         raise 'The data preprocessing step is only for test set'
 

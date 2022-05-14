@@ -111,18 +111,19 @@ if __name__ == '__main__':
     print('Fining all input partial paths for voxelization.')
     paths = sorted(glob(cfg['data_path'] + cfg['preprocessing']['voxelized_colored_pointcloud_sampling']['input_files_regex']))
     
-    test = cfg['preprocessing']['voxelized_colored_pointcloud_sampling']['test']
+    test = cfg['preprocessing']['voxelized_colored_pointcloud_sampling']['evaluation']
     if test:
         generation_mesh_paths = sorted(glob(cfg['preprocessing']['scale_back_obj']['generation_path'] + cfg['preprocessing']['scale_back_obj']['input_files_regex']))
     #print(paths)
         new_paths = []
         for i, path in enumerate(paths):
-            new_paths.append((path, grid_points, kdtree, bbox, res, num_points, bbox_str, generation_mesh_paths, test))
+            new_paths.append((path, grid_points, kdtree, bbox, res, num_points, bbox_str, generation_mesh_paths[i], test))
     else:
         new_paths = []
         for i, path in enumerate(paths):
             new_paths.append((path, grid_points, kdtree, bbox, res, num_points, bbox_str, None, test))
-
+    
+    #print(new_paths)
     print('Start voxelization.')
     p = Pool(mp.cpu_count())
     for _ in tqdm.tqdm(p.imap_unordered(voxelized_colored_pointcloud_sampling, new_paths), total=len(paths)):
