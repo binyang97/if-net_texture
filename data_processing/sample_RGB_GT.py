@@ -10,9 +10,9 @@ import if_net_texture.data_processing.utils
 import traceback
 import tqdm
 
-import sys
-sys.path.append(".")
-from config import config_loader as cfg_loader
+#import sys
+#sys.path.append(".")
+import if_net_texture.config.config_loader as cfg_loader
 
 
 def sample_colors(gt_mesh_params):

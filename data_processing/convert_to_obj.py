@@ -7,7 +7,7 @@ from multiprocessing import Pool
 
 
 print('Finding Paths to convert (from .npz to .obj files).')
-paths = glob('../SHARP_data/track1/*/*/*.npz')
+paths = glob('../track2_testdata/*/*/*.npz')
 
 
 print('Start converting.')
