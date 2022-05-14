@@ -6,7 +6,7 @@ import os
 import multiprocessing as mp
 from multiprocessing import Pool
 import argparse
-import if_net_texture.data_processing.utils
+from if_net_texture.data_processing import utils
 import traceback
 import tqdm
 
@@ -33,6 +33,8 @@ def sample_colors(gt_mesh_params):
             return
         
         gt_mesh = utils.as_mesh(trimesh.load(gt_mesh_path))
+        #gt_mesh.show()
+        #print(type(gt_mesh))
         sample_points, face_idxs = gt_mesh.sample(num_points, return_index = True)
 
         triangles = gt_mesh.triangles[face_idxs]

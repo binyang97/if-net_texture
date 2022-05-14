@@ -1,4 +1,4 @@
-import if_net_texture.data_processing.utils
+from if_net_texture.data_processing import utils
 from scipy.spatial import cKDTree as KDTree
 import numpy as np
 import trimesh
@@ -68,10 +68,13 @@ def voxelized_colored_pointcloud_sampling(tmp_path):
 
         # encode uncolorized, complete shape of object (at inference time obtained from IF-Nets surface reconstruction)
         # encoding is done by sampling a pointcloud and voxelizing it (into discrete grid for 3D CNN usage)
+        
+        
         dir = os.path.normpath(os.path.dirname(partial_mesh_path))
         dir_comp = dir.split(os.sep)
         dir_comp[-2] = dir_comp[-2][:-7] + 'gt'
-        full_shape = trimesh.load(os.path.join(os.sep.join(dir_comp), gt_file_name +'.obj'))
+        full_shape = utils.as_mesh(trimesh.load(os.path.join(os.sep.join(dir_comp), gt_file_name +'.obj')))
+        
         shape_point_cloud = full_shape.sample(num_points)
         S = np.zeros(len(grid_points), dtype=np.int8)
 
@@ -105,6 +108,7 @@ if __name__ == '__main__':
 
     print('Fining all input partial paths for voxelization.')
     paths = glob(cfg['data_path'] + cfg['preprocessing']['voxelized_colored_pointcloud_sampling']['input_files_regex'])
+    #print(paths)
     new_paths = []
     for path in paths:
         new_paths.append((path, grid_points, kdtree, bbox, res, num_points, bbox_str))
