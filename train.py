@@ -69,7 +69,7 @@ def train_basic(rank, world_size, cfg):
         val_index = index_torch.detach().cpu().numpy()
     dist.barrier()
 
-    trainer = training.Trainer(ddp_model, ddp_model.device,train_dataset, val_dataset, cfg['folder_name'], optimizer=cfg['training']['optimizer'], parallel=True)
+    trainer = training.Trainer(ddp_model, ddp_model.device,train_dataset, val_dataset, cfg['folder_name'], optimizer=cfg['training']['optimizer'])
     dist.barrier()
     trainer.train_model(1500)
 
