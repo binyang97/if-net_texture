@@ -13,6 +13,7 @@ preprocessing:
   generation_path: ./experiments
   input_files_regex: /*/*/*/*/*/*.off
  voxelized_colored_pointcloud_sampling:
+  evaluation: True
   input_files_regex: /*/*/*-partial-*.obj
 generation:
  retrieval_resolution: 256

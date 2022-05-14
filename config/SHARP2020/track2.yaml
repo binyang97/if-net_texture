@@ -7,17 +7,12 @@ data_path: ./track2_testdata/
 data_bounding_box: [-0.8, 0.8, -0.15, 2.1, -0.8, 0.8]
 #split_file: ../SHARP_data/track2/split.npz
 ## Preprocessing step for evaluation set
-preprocessing_val:
- scale_back_obj:
-  generation_input: ./experiments/*/*/*/*/*_scaled.off
-  sample_number: 100000
- voxelized_colored_pointcloud_sampling:
-  input_files_regex: /*/*/*-partial-*.obj
 preprocessing:
  color_sampling:
   input_files_regex: /*_gt/*/*.obj
   sample_number: 100000
  voxelized_colored_pointcloud_sampling:
+  test: False
   input_files_regex: /*/*/*-partial-*.obj
 training:
  batch_size: 2

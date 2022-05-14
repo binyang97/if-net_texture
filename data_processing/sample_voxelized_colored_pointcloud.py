@@ -17,7 +17,7 @@ import if_net_texture.data_processing.utils
 
 
 def voxelized_colored_pointcloud_sampling(tmp_path):
-    partial_mesh_path, grid_points, kdtree, bbox, res, num_points, bbox_str = tmp_path
+    partial_mesh_path, grid_points, kdtree, bbox, res, num_points, bbox_str, generation_mesh_fullpath, test= tmp_path
     try:
         path = os.path.normpath(partial_mesh_path)
         gt_file_name = path.split(os.sep)[-2] # model 2
@@ -69,12 +69,14 @@ def voxelized_colored_pointcloud_sampling(tmp_path):
         # encode uncolorized, complete shape of object (at inference time obtained from IF-Nets surface reconstruction)
         # encoding is done by sampling a pointcloud and voxelizing it (into discrete grid for 3D CNN usage)
         
-        
-        dir = os.path.normpath(os.path.dirname(partial_mesh_path))
-        dir_comp = dir.split(os.sep)
-        dir_comp[-2] = dir_comp[-2][:-7] + 'gt'
-        full_shape = utils.as_mesh(trimesh.load(os.path.join(os.sep.join(dir_comp), gt_file_name +'.obj')))
-        
+        if test:
+            full_shape = trimesh.load(generation_mesh_fullpath)
+        else:
+            dir = os.path.normpath(os.path.dirname(partial_mesh_path))
+            dir_comp = dir.split(os.sep)
+            dir_comp[-2] = dir_comp[-2][:-7] + 'gt'
+            full_shape = utils.as_mesh(trimesh.load(os.path.join(os.sep.join(dir_comp), gt_file_name +'.obj')))
+            
         shape_point_cloud = full_shape.sample(num_points)
         S = np.zeros(len(grid_points), dtype=np.int8)
 
@@ -107,11 +109,19 @@ if __name__ == '__main__':
     kdtree = KDTree(grid_points)
 
     print('Fining all input partial paths for voxelization.')
-    paths = glob(cfg['data_path'] + cfg['preprocessing']['voxelized_colored_pointcloud_sampling']['input_files_regex'])
+    paths = sorted(glob(cfg['data_path'] + cfg['preprocessing']['voxelized_colored_pointcloud_sampling']['input_files_regex']))
+    
+    test = cfg['preprocessing']['voxelized_colored_pointcloud_sampling']['test']
+    if test:
+        generation_mesh_paths = sorted(glob(cfg['preprocessing']['scale_back_obj']['generation_path'] + cfg['preprocessing']['scale_back_obj']['input_files_regex']))
     #print(paths)
-    new_paths = []
-    for path in paths:
-        new_paths.append((path, grid_points, kdtree, bbox, res, num_points, bbox_str))
+        new_paths = []
+        for i, path in enumerate(paths):
+            new_paths.append((path, grid_points, kdtree, bbox, res, num_points, bbox_str, generation_mesh_paths, test))
+    else:
+        new_paths = []
+        for i, path in enumerate(paths):
+            new_paths.append((path, grid_points, kdtree, bbox, res, num_points, bbox_str, None, test))
 
     print('Start voxelization.')
     p = Pool(mp.cpu_count())
