@@ -11,7 +11,7 @@ preprocessing:
  scale_back_obj:
   mode: test
   generation_path: ./experiments
-  input_files_regex: /*/*/*/*/*.off
+  input_files_regex: /*/*/*/*/*/*.off
  voxelized_colored_pointcloud_sampling:
   input_files_regex: /*/*/*-partial-*.obj
 generation:

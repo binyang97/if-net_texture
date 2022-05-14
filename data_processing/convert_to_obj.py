@@ -10,11 +10,11 @@ import if_net_texture.config.config_loader as cfg_loader
 
 
 
-print('Finding Paths to convert (from .npz to .obj files).')
-paths = glob('../track2_testdata/*/*/*.npz')
+#print('Finding Paths to convert (from .npz to .obj files).')
+#paths = glob('../track2_testdata/*/*/*.npz')
 
 
-print('Start converting.')
+#print('Start converting.')
 #def convert(path):
     #outpath = path[:-4] + '.obj'
 
@@ -48,18 +48,22 @@ if __name__=='__main__':
     args = parser.parse_args()
 
     cfg = cfg_loader.load(args.config)
-    if cfg['processing']['mode'] == 'test':
+    if cfg['preprocessing']['scale_back_obj']['mode'] == 'test':
 
-        generation_mesh_paths = glob(cfg['processing']['scale_back_obj']['generation_path'] + cfg['processing']['scale_back_obj']['input_file_regix'])
-        partial_mesh_paths = glob(cfg['data_path'] + cfg['processing']['voxelized_colored_pointcloud_sampling']['input_file_regix'])
+        generation_mesh_paths = sorted(glob(cfg['preprocessing']['scale_back_obj']['generation_path'] + cfg['preprocessing']['scale_back_obj']['input_files_regex']))
+        partial_mesh_paths = sorted(glob(cfg['data_path'] + cfg['preprocessing']['voxelized_colored_pointcloud_sampling']['input_files_regex']))
+        
 
         params = []
 
         for i, generation_path in enumerate(generation_mesh_paths):
-            params.append([generation_path, partial_mesh_paths[i]])
+            params.append([partial_mesh_paths[i], generation_path])
+        
+        print(params[0])
+    else:
+        raise 'The data preprocessing step is only for test set'
 
-
-
+    
 
     p = Pool(mp.cpu_count())
     for _ in tqdm.tqdm(p.imap_unordered(scale_back, params), total=len(params)):
