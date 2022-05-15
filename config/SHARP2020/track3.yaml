@@ -2,16 +2,18 @@ input_type: pointcloud
 input_resolution: 128
 input_points_number: 100000
 model: TEXR
-folder_name: SHARP2020_c1_t1
-data_path: ./track2_testdata/track3
+folder_name: ./pretrained_texture
+data_path: ../SHARP_data/track3
+#data_path: ./track2_testdata/track3
 data_bounding_box: [-0.8, 0.8, -0.15, 2.1, -0.8, 0.8]
 #split_file: ../SHARP_data/track2/split.npz
 ## Preprocessing step for evaluation set
 preprocessing:
  scale_back_obj:
   mode: test
-  generation_path: ./experiments
-  input_files_regex: /*/*/*/*/*/*.off
+  generation_path: ../if_net/experiments/iVoxels_dist-0.5_0.5_sigmas-0.1_0.01_v32_mShapeNet32Vox
+  #generation_path: ./experiments/ShapeNet32Vox
+  input_files_regex: /*/*/*/*/*.off
  voxelized_colored_pointcloud_sampling:
   evaluation: True
   input_files_regex: /*/*/*-partial-*.obj

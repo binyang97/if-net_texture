@@ -114,10 +114,12 @@ if __name__ == '__main__':
     test = cfg['preprocessing']['voxelized_colored_pointcloud_sampling']['evaluation']
     if test:
         generation_mesh_paths = sorted(glob(cfg['preprocessing']['scale_back_obj']['generation_path'] + cfg['preprocessing']['scale_back_obj']['input_files_regex']))
+        print(len(generation_mesh_paths), len(paths))
     #print(paths)
         new_paths = []
         for i, path in enumerate(paths):
             new_paths.append((path, grid_points, kdtree, bbox, res, num_points, bbox_str, generation_mesh_paths[i], test))
+            
     else:
         new_paths = []
         for i, path in enumerate(paths):
