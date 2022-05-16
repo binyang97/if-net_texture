@@ -27,7 +27,7 @@ def train_basic(rank, world_size, cfg):
     print(f'Running basic DDP on rank {rank}.')
     setup(rank, world_size)
 
-    net = model.get_models()[cfg['model']]()
+    net = model.get_models()[cfg['model']](rank = rank)
     net = net.to(rank)
     ddp_model = DDP(net, device_ids = [rank])
     if torch.cuda.get_device_name(rank) == "NIVIDIA GeoForce GTX 1080":
