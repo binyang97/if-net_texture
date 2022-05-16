@@ -45,12 +45,17 @@ class Generator(object):
         i = inputs.to(self.device).float()
         full_pred = []
 
-        p_batches = torch.split(p, 200000, dim=1)
+        p_batches = torch.split(p, 100000, dim=1)
+
 
         for p_batch in p_batches:
-            with torch.no_grad():
+             #print(type(p_batch))
+             #p_batch = p_batch.to(self.device)
+             #print(type(p_batch), p_batch.get_device(), i.get_device())
+             with torch.no_grad():
                 pred_rgb = self.model(p_batch,i)
-            full_pred.append(pred_rgb.squeeze(0).detach().cpu().transpose(0,1))
+             full_pred.append(pred_rgb.squeeze(0).detach().cpu().transpose(0,1))
+             #full_pred.append(pred_rgb.squeeze(0).transpose(0,1))
 
         pred_rgb = torch.cat(full_pred, dim=0).numpy()
         pred_rgb.astype(np.int)[0]

@@ -4,6 +4,7 @@ build/
 *.pyc
 *.c
 /experiments/*
+/experiments_notused/*
 *.cpp
 /trash/
 dataset/SHARP2020/challenge1-track1/*
@@ -12,3 +13,4 @@ README.md~
 sharp_teaser.xcf
 **/.fuse*
 lsf*
+track2_testdata/
