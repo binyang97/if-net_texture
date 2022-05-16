@@ -5,6 +5,7 @@ import multiprocessing as mp
 from multiprocessing import Pool
 import argparse
 import trimesh
+import time
 
 import if_net_texture.config.config_loader as cfg_loader
 
@@ -80,7 +81,10 @@ if __name__=='__main__':
     else:
         raise 'The data preprocessing step is only for test set'
 
-    
+    #print(params)
+    #for param in params:
+        #print(param)
+        #time.sleep(2)
 
     p = Pool(mp.cpu_count())
     for _ in tqdm.tqdm(p.imap_unordered(scale_back, params), total=len(params)):
