@@ -40,7 +40,7 @@ def train_basic(rank, world_size, cfg):
     train_length = len(train_dataset)
     train_partial_length = int(train_length/world_size)
     if not rank:
-        # if rank is not 0
+        # if rank is 0
         train_index = np.arange(0, train_length, dtype=int)
         np.random.shuffle(train_index)
         for i in range(1, world_size):
@@ -68,6 +68,9 @@ def train_basic(rank, world_size, cfg):
         dist.recv(tensor=index_torch, src=0)
         val_index = index_torch.detach().cpu().numpy()
     dist.barrier()
+
+    train_dataset.random_split(train_index)
+    val_dataset.random_split(val_index)
 
     trainer = training.Trainer(ddp_model, ddp_model.device,train_dataset, val_dataset, cfg['folder_name'], optimizer=cfg['training']['optimizer'])
     dist.barrier()
