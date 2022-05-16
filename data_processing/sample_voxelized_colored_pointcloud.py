@@ -15,6 +15,8 @@ import traceback
 import tqdm
 import if_net_texture.data_processing.utils
 
+from PIL import Image
+
 
 def voxelized_colored_pointcloud_sampling(tmp_path):
     partial_mesh_path, grid_points, kdtree, bbox, res, num_points, bbox_str, generation_mesh_fullpath, test= tmp_path
@@ -54,6 +56,13 @@ def voxelized_colored_pointcloud_sampling(tmp_path):
             uvs.append(uv)
 
         partial_texture = partial_mesh.visual.material.image
+        
+        #out_file_img = os.path.dirname(partial_mesh_path) + '/{}_texture_partial.jpg'\
+            #.format(full_file_name)
+            
+        #partial_texture = partial_texture.save(out_file_img)
+        
+        #return 
 
         colors = trimesh.visual.color.uv_to_color(np.array(uvs), partial_texture)
 
@@ -65,6 +74,22 @@ def voxelized_colored_pointcloud_sampling(tmp_path):
         R[idx] = colors[:,0]
         G[idx] = colors[:,1]
         B[idx] = colors[:,2]
+        
+        
+        
+        # Test
+        print(R.shape)
+        img = np.dstack((R.reshape(1024, 1024), G.reshape(1024, 1024), B.reshape(1024, 1024)))
+        img_filtered = img[img[:,:,0] >= 0]
+        print(img_filtered)
+        
+        out_file_img = os.path.dirname(partial_mesh_path) + '/{}_texture_partial_test.jpg'\
+            .format(full_file_name)
+        pil_image = Image.fromarray(np.uint8(img_filtered)).convert('RGB')
+        
+        pil_image = pil_image.save(out_file_img)
+        
+        return
 
         # encode uncolorized, complete shape of object (at inference time obtained from IF-Nets surface reconstruction)
         # encoding is done by sampling a pointcloud and voxelizing it (into discrete grid for 3D CNN usage)

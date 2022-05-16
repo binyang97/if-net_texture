@@ -30,8 +30,8 @@ class Trainer(object):
         self.checkpoint_path = self.exp_path + 'checkpoints/'
         if not os.path.exists(self.checkpoint_path):
             if not rank:
-                print(self.checkout_path)
-                os.mkdirs(self.checkpoint_path)
+                print(self.checkpoint_path)
+                os.makedirs(self.checkpoint_path)
         if not rank:
             self.writer = SummaryWriter(self.exp_path + 'summary'.format(exp_name))
         else:

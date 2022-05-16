@@ -18,7 +18,7 @@ class Generator(object):
         self.checkpoint_path = os.path.dirname(__file__) + '/../experiments/{}/checkpoints/'.format(
             cfg['folder_name'])
         self.exp_folder_name = cfg['folder_name']
-        self.checkpoint = self.load_checkpoint(cfg['generation']['checkpoint'], map_location)
+        self.checkpoint = self.load_checkpoint(cfg['generation']['checkpoint'])
         self.threshold = cfg['generation']['retrieval_threshold']
 
         self.device = device

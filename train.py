@@ -45,7 +45,7 @@ def train_basic(rank, world_size, cfg):
         np.random.shuffle(train_index)
         for i in range(1, world_size):
             partial_index = torch.from_numpy(train_index[train_partial_length*i: train_partial_length*(i+1)])
-            dist.send(tensor=partial_index.to(dtype=torch.int))
+            dist.send(tensor=partial_index.to(dtype=torch.int), dst=i)
         train_index = train_index[: train_partial_length]
     else:
         index_torch = torch.zeros(train_partial_length, dtype=torch.int)
@@ -72,7 +72,7 @@ def train_basic(rank, world_size, cfg):
     train_dataset.random_split(train_index)
     val_dataset.random_split(val_index)
 
-    trainer = training.Trainer(ddp_model, ddp_model.device,train_dataset, val_dataset, cfg['folder_name'], optimizer=cfg['training']['optimizer'])
+    trainer = training.Trainer(ddp_model, ddp_model.device,train_dataset, val_dataset, cfg['folder_name'], rank = rank, world_size = world_size, optimizer=cfg['training']['optimizer'])
     dist.barrier()
     trainer.train_model(1500)
 

@@ -1,5 +1,5 @@
 import if_net_texture.models.local_model as model
-import if_net_texture.models.dataloader as dataloader
+import if_net_texture.models.dataloader as Dataloader
 import numpy as np
 import argparse
 from if_net_texture.models.generation import Generator
@@ -32,9 +32,9 @@ def generate_basic(rank, world_size, cfg):
     if torch.cuda.get_device_name(rank) == "NIVIDIA GeoForce GTX 1080":
         cfg['training']['batch_size'] = int(cfg['training']['batch_size']/11.0*8)
 
-    dataloader = dataloader.VoxelizedDataset('test_texture', cfg, generation = True, num_workers=0).get_loader()
+    dataloader = Dataloader.VoxelizedDataset('test_texture', cfg, generation = True, num_workers=0).get_loader()
 
-    gen = Generator(ddp_model, cfg, rank = rank, world_size = world_size)
+    gen = Generator(ddp_model, cfg, device=ddp_model.device, rank = rank, world_size = world_size)
 
     out_path = 'experiments/{}/evaluation_{}/Track_2/eval'.format(cfg['folder_name'], gen.checkpoint)
 
@@ -113,11 +113,24 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Generation Model'
     )
-
+    #parser.add_argument('config', type=int, default=1, help='number of GPUs')
     parser.add_argument('config', type=str, help='Path to config file.')
+    
     args = parser.parse_args()
 
     cfg = cfg_loader.load(args.config)
+    
+    n_gpus = torch.cuda.device_count()
+    assert n_gpus >= 2, f"Requires at least 2 GPUs to run, but got {n_gpus}"
+    
+    world_size = n_gpus
+    
+    mp.spawn(generate_basic,
+             args=(world_size, cfg),
+             nprocs=world_size,
+             join=True)
+             
+   # generate_basic(rank, world_size, cfg)
 
     # net = model.get_models()[cfg['model']]()
 
