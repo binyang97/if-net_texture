@@ -49,9 +49,16 @@ def barycentric_coordinates(p, q, u, v):
 
 def as_mesh(scene_or_mesh):
     if isinstance(scene_or_mesh, trimesh.Scene):
-        mesh = trimesh.util.concatenate([
-            trimesh.Trimesh(vertices=m.vertices, faces=m.faces)
-            for m in scene_or_mesh.geometry.values()])
+        meshes = scene_or_mesh.dump()
+        mesh_max_size = 0
+        for mesh in meshes:
+            size = len(mesh.faces)
+            if size > mesh_max_size:
+                mesh_selected = mesh
+                mesh_max_size = size
+        mesh = mesh_selected
+        print("Thats Scene!!!!!!!!!!!!!!!!!!!!!!")
+        #mesh = trimesh.Trimesh(vertices = m.vertices, faces = m.faces)
     else:
         mesh = scene_or_mesh
     return mesh
