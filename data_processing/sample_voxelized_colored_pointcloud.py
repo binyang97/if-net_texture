@@ -30,9 +30,9 @@ def voxelized_colored_pointcloud_sampling(tmp_path):
         print("partial_path: ", os.path.dirname(partial_mesh_path))
 
         
-        if os.path.exists(out_file):
-            print('File exists. Done.')
-            return
+        #if os.path.exists(out_file):
+            #print('File exists. Done.')
+            #return
         
         # color from partial input
         partial_mesh = utils.as_mesh(trimesh.load(partial_mesh_path))

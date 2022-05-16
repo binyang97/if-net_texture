@@ -25,18 +25,33 @@ def scale_back(parameters):
     partial_mesh_fullpath, generation_mesh_fullpath= parameters
 
     mesh_generation = trimesh.load(generation_mesh_fullpath)
+    
     mesh_partial = trimesh.load(partial_mesh_fullpath)
-
+    
     output_fullpath = os.path.splitext(generation_mesh_fullpath)[0] + "_scaled_back" + ".obj"
     if os.path.exists(output_fullpath):
-        print('File exists. Done.')
-        return
+        mesh = trimesh.load(output_fullpath)
+        #print(type(mesh))
+        #print(output_fullpath)
+        if isinstance(mesh, trimesh.Trimesh):
+            print('File exists. Done.')
+            return
+        else:
+            print("File exists but is not Mesh, it will retry")
+    
+    OUTPUT = True
+    while OUTPUT:
 
-    total_size = (mesh_partial.bounds[1] - mesh_partial.bounds[0]).max()
-    centers = (mesh_partial.bounds[1] + mesh_partial.bounds[0]) /2
-
-    mesh_generation.apply_scale(total_size)
-    mesh_generation.apply_translation(centers)
+        total_size = (mesh_partial.bounds[1] - mesh_partial.bounds[0]).max()
+        centers = (mesh_partial.bounds[1] + mesh_partial.bounds[0]) /2
+  
+        mesh_generation.apply_scale(total_size)
+        mesh_generation.apply_translation(centers)
+        
+        #print(type(mesh_generation))
+        if isinstance(mesh_generation, trimesh.Trimesh):
+            print("The output is not Mesh, it will retry")
+            OUTPUT = False
     
     mesh_generation.export(output_fullpath)
     print(f'Finished to scale back the output{output_fullpath}')

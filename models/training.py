@@ -15,7 +15,7 @@ class Trainer(object):
         self.model = model.to(device)
         self.device = device
         if optimizer == 'Adam':
-            self.optimizer = optim.Adam(self.model.parameters(), lr=1e-4)
+            self.optimizer = optim.Adam(self.model.parameters(), lr=1e-4, weight_decay = 0.1)
         if optimizer == 'Adadelta':
             self.optimizer = optim.Adadelta(self.model.parameters())
         if optimizer == 'RMSprop':

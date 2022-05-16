@@ -6,6 +6,8 @@ import pickle
 import imp
 import trimesh
 import torch
+from glob import glob
+#import if_net_texture
 
 
 
@@ -33,6 +35,7 @@ class VoxelizedDataset(Dataset):
         else:
             self.voxelized_pointcloud = True
             self.pointcloud_samples = cfg['input_points_number']
+        self.cfg = cfg
 
 
 
@@ -47,7 +50,7 @@ class VoxelizedDataset(Dataset):
         split = path.split(os.sep)[-3]
         gt_file_name = path.split(os.sep)[-2]
         full_file_name = os.path.splitext(path.split(os.sep)[-1])[0]
-
+        
         voxel_path = os.path.join(self.path, split, gt_file_name,\
                    '{}_voxelized_colored_point_cloud_res{}_points{}_bbox{}.npz'\
             .format(full_file_name, self.res, self.pointcloud_samples, self.bbox_str))
@@ -64,7 +67,8 @@ class VoxelizedDataset(Dataset):
         S = np.reshape(S, (self.res,)*3)
         input = np.array([R,G,B,S])
 
-        if self.mode == 'test':
+        if self.mode == 'test' or self.mode == 'test_texture':
+            path =glob(self.cfg['preprocessing']['scale_back_obj']['generation_path'] + self.cfg['generation']['generation_files_regex'] + gt_file_name + "/*/*.obj")[-1]
             return { 'inputs': np.array(input, dtype=np.float32), 'path' : path}
 
 

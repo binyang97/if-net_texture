@@ -24,12 +24,12 @@ if __name__ == "__main__":
 
     net = model.get_models()[cfg['model']]()
 
-    dataloader = dataloader.VoxelizedDataset('test', cfg, generation = True, num_workers=0).get_loader()
+    dataloader = dataloader.VoxelizedDataset('test_texture', cfg, generation = True, num_workers=0).get_loader()
 
     gen = Generator(net, cfg)
 
 
-    out_path = 'experiments/{}/evaluation_{}/'.format(cfg['folder_name'], gen.checkpoint)
+    out_path = 'experiments/{}/evaluation_{}/Track_2/eval'.format(cfg['folder_name'], gen.checkpoint)
 
 
     for data in tqdm(dataloader):
@@ -42,15 +42,19 @@ if __name__ == "__main__":
             print('none')
             continue
 
-
+        
+        #print(path)
         path = os.path.normpath(path)
         challange = path.split(os.sep)[-4]
         split = path.split(os.sep)[-3]
-        gt_file_name = path.split(os.sep)[-2]
+        gt_file_name = path.split(os.sep)[-3]
+        scan_name = path.split(os.sep)[-3]
+        
+        gt_file_name_scaled = path.split(os.sep)[-2]
         basename = path.split(os.sep)[-1]
         filename_partial = os.path.splitext(path.split(os.sep)[-1])[0]
 
-        file_out_path = out_path + '/{}/'.format(gt_file_name)
+        file_out_path = out_path + '/{}/'.format(scan_name)
         os.makedirs(file_out_path, exist_ok=True)
 
         if os.path.exists(file_out_path + 'colored_surface_reconstuction.obj'):
@@ -58,8 +62,10 @@ if __name__ == "__main__":
 
 
         path_surface = os.path.join(cfg['data_path'], split, gt_file_name, gt_file_name + '_normalized.obj')
-
-        mesh = trimesh.load(path_surface)
+        if cfg['generation']['mode'] == 'test_texture':
+            path_surface = path
+        print(scan_name)
+        mesh = trimesh.load(path_surface, force = 'mesh')
         
         # create new uncolored mesh for color prediction
         pred_mesh = trimesh.Trimesh(mesh.vertices, mesh.faces)
@@ -77,4 +83,5 @@ if __name__ == "__main__":
         # attach predicted colors to the mesh
         pred_mesh.visual.vertex_colors = colors_pred_surface
 
-        pred_mesh.export( file_out_path + f'{filename_partial}_color_reconstruction.obj')
+        #pred_mesh.export( file_out_path + f'{filename_partial}_color_reconstruction.obj')
+        pred_mesh.export( file_out_path + f'{scan_name}-completed.obj')
