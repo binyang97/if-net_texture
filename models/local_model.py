@@ -19,8 +19,10 @@ def get_models():
 # ----------------------------------------------------------------------------------------------------
 class ShapeNet32Vox(nn.Module):
 
-    def __init__(self, hidden_dim=256):
+    def __init__(self, hidden_dim=256, rank=0):
         super(ShapeNet32Vox, self).__init__()
+
+        self.rank = rank
 
         self.conv_1 = nn.Conv3d(1, 32, 3, padding=1)  # out: 32
         self.conv_1_1 = nn.Conv3d(32, 64, 3, padding=1)  # out: 32
@@ -52,7 +54,7 @@ class ShapeNet32Vox(nn.Module):
                 input[x] = y * displacment
                 displacments.append(input)
 
-        self.displacments = torch.Tensor(displacments).cuda()
+        self.displacments = torch.Tensor(displacments).to(self.rank)
 
     def forward(self, p, x):
         x = x.unsqueeze(1)
@@ -98,8 +100,9 @@ class ShapeNet32Vox(nn.Module):
 
 class ShapeNet128Vox(nn.Module):
 
-    def __init__(self, hidden_dim=256):
+    def __init__(self, hidden_dim=256, rank=0):
         super(ShapeNet128Vox, self).__init__()
+        self.rank = rank
         # accepts 128**3 res input
         self.conv_in = nn.Conv3d(1, 16, 3, padding=1)  # out: 128
         self.conv_0 = nn.Conv3d(16, 32, 3, padding=1)  # out: 64
@@ -136,7 +139,7 @@ class ShapeNet128Vox(nn.Module):
                 input[x] = y * displacment
                 displacments.append(input)
 
-        self.displacments = torch.Tensor(displacments).cuda()
+        self.displacments = torch.Tensor(displacments).to(self.rank)
 
     def forward(self, p, x):
         x = x.unsqueeze(1)
@@ -199,8 +202,9 @@ class ShapeNet128Vox(nn.Module):
 
 class ShapeNetPoints(nn.Module):
 
-    def __init__(self, hidden_dim=256):
+    def __init__(self, hidden_dim=256, rank=0):
         super(ShapeNetPoints, self).__init__()
+        self.rank = rank
         # 128**3 res input
         self.conv_in = nn.Conv3d(1, 16, 3, padding=1, padding_mode='border')
         self.conv_0 = nn.Conv3d(16, 32, 3, padding=1, padding_mode='border')
@@ -301,8 +305,10 @@ class ShapeNetPoints(nn.Module):
 class TEXR(nn.Module):
 
 
-    def __init__(self, hidden_dim=256):
+    def __init__(self, hidden_dim=256, rank=0):
         super(TEXR, self).__init__()
+
+        self.rank = rank
 
         self.conv_in = nn.Conv3d(4, 16, 3, padding=1, padding_mode='border')  # out: 256 ->m.p. 128
         self.conv_0 = nn.Conv3d(16, 32, 3, padding=1, padding_mode='border')  # out: 128
@@ -342,7 +348,7 @@ class TEXR(nn.Module):
                 input[x] = y * displacment
                 displacments.append(input)
 
-        self.displacments = torch.Tensor(displacments).cuda()
+        self.displacments = torch.Tensor(displacments).to(self.rank)
 
     def forward(self, p, x):
         # x = x.unsqueeze(1)
@@ -389,14 +395,24 @@ class TEXR(nn.Module):
         feature_6 = F.grid_sample(net, p, padding_mode='border')
 
         # here every channel corresponse to one feature.
-
+        
         features = torch.cat((feature_0, feature_1, feature_2, feature_3, feature_4, feature_5, feature_6),
                              dim=1)  # (B, features, 1,7,sample_num)
         shape = features.shape
         features = torch.reshape(features,(shape[0], shape[1] * shape[3], shape[4]))  # (B, featues_per_sample, samples_num)
+        
+        #print(features.size(), p_features.size())
+        
+        #feature_shape = features.shape[1]
+        #p_feature_shape = p_features.shape[1]
+        #second_dim = features.shape[2]
+        #first_dim = features.shape[0]
+        #features_cat = torch.zeros((first_dim, feature_shape + p_feature_shape , second_dim))
+        #features_cat[:, :feature_shape,:] = features
+        #features_cat[:, feature_shape:,:] = p_features
         features = torch.cat((features, p_features), dim=1)  # (B, featue_size, samples_num) samples_num 0->0,...,N->N
         # print('features: ', features[:,:,:3])
-
+        #features = features_cat
         net = self.actvn(self.fc_0(features))
         net = self.actvn(self.fc_1(net))
         net = self.actvn(self.fc_2(net))

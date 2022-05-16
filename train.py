@@ -13,7 +13,7 @@ import random
 import time
 
 def setup(rank, world_size):
-    os.enviro['MASTER_ADDR'] = 'localhost'
+    os.environ['MASTER_ADDR'] = 'localhost'
     os.environ['MASTER_PORT'] = '12355'
     # initialize the process group
     dist.init_process_group("gloo", rank=rank, world_size=world_size)
@@ -27,7 +27,7 @@ def train_basic(rank, world_size, cfg):
     print(f'Running basic DDP on rank {rank}.')
     setup(rank, world_size)
 
-    net = model.get_models()[cfg['model']]()
+    net = model.get_models()[cfg['model']](rank = rank)
     net = net.to(rank)
     ddp_model = DDP(net, device_ids = [rank])
     if torch.cuda.get_device_name(rank) == "NIVIDIA GeoForce GTX 1080":
@@ -99,7 +99,7 @@ if __name__ == '__main__':
 
     random.seed(time.time())
 
-    mp.spwan(train_basic,
+    mp.spawn(train_basic,
             args=(world_size, cfg),
             nprocs=world_size,
             join=True)
