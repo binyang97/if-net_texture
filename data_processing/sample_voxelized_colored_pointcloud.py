@@ -56,9 +56,16 @@ def voxelized_colored_pointcloud_sampling(tmp_path):
 
         partial_texture = partial_mesh.visual.material.image
         
-        print(type(partial_texture))
         
-        return
+        #print(partial_texture)
+        
+        #print('Type of the texture: ', type(partial_texture))
+        
+        #os.path.dirname(partial_mesh_path) + '/{}_voxelized_colored_point_cloud_res{}_points{}_bbox{}.npz'\
+         #   .format(full_file_name, res, num_points, bbox_str)
+        
+        
+        #return
         
         
 
