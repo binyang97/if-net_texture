@@ -26,7 +26,7 @@ def generate_basic(rank, world_size, cfg):
     print(f'Running basic DDP on rank {rank}.')
     setup(rank, world_size)
 
-    net = model.get_models()[cfg['model']]()
+    net = model.get_models()[cfg['model']](rank = rank)
     net = net.to(rank)
     ddp_model = DDP(net, device_ids = [rank])
     if torch.cuda.get_device_name(rank) == "NIVIDIA GeoForce GTX 1080":
@@ -34,7 +34,7 @@ def generate_basic(rank, world_size, cfg):
 
     dataloader = dataloader.VoxelizedDataset('test_texture', cfg, generation = True, num_workers=0).get_loader()
 
-    gen = Generator(net, cfg, rank = rank, world_size = world_size)
+    gen = Generator(ddp_model, cfg, rank = rank, world_size = world_size)
 
     out_path = 'experiments/{}/evaluation_{}/Track_2/eval'.format(cfg['folder_name'], gen.checkpoint)
 
@@ -174,6 +174,3 @@ if __name__ == "__main__":
     #     # attach predicted colors to the mesh
     #     pred_mesh.visual.vertex_colors = colors_pred_surface
 
-    #     pred_mesh.export( file_out_path + f'{filename_partial}_color_reconstruct
-        #pred_mesh.export( file_out_path + f'{filename_partial}_color_reconstruction.obj')
-        #pred_mesh.export( file_out_path + f'{scan_name}-completed.obj')
