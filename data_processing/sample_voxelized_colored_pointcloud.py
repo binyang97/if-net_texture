@@ -14,6 +14,7 @@ from if_net_texture.config import config_loader as cfg_loader
 import traceback
 import tqdm
 import if_net_texture.data_processing.utils
+import time
 
 
 def voxelized_colored_pointcloud_sampling(tmp_path):
@@ -54,6 +55,12 @@ def voxelized_colored_pointcloud_sampling(tmp_path):
             uvs.append(uv)
 
         partial_texture = partial_mesh.visual.material.image
+        
+        print(type(partial_texture))
+        
+        return
+        
+        
 
         colors = trimesh.visual.color.uv_to_color(np.array(uvs), partial_texture)
 
