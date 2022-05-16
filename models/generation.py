@@ -6,15 +6,17 @@ from glob import glob
 import numpy as np
 
 class Generator(object):
-    def __init__(self, model, cfg, device = torch.device("cuda")):
-        self.model = model.to(device)
+    def __init__(self, model, cfg, device, rank, world_size):
+        # self.model = model.to(device)
+        self.model = model
         self.model.eval()
 
 
         self.checkpoint_path = os.path.dirname(__file__) + '/../experiments/{}/checkpoints/'.format(
             cfg['folder_name'])
         self.exp_folder_name = cfg['folder_name']
-        self.checkpoint = self.load_checkpoint(cfg['generation']['checkpoint'])
+        map_location = f'cuda:{rank}'
+        self.checkpoint = self.load_checkpoint(cfg['generation']['checkpoint'], map_location)
         self.threshold = cfg['generation']['retrieval_threshold']
 
         self.device = device
@@ -64,7 +66,7 @@ class Generator(object):
 
 
 
-    def load_checkpoint(self, checkpoint):
+    def load_checkpoint(self, checkpoint, map_location):
         if checkpoint == -1:
             val_min_npy = os.path.dirname(__file__) + '/../experiments/{}/val_min.npy'.format(
                 self.exp_folder_name)
@@ -73,6 +75,6 @@ class Generator(object):
         else:
             path = self.checkpoint_path + 'checkpoint_epoch_{}.tar'.format(checkpoint)
         print('Loaded checkpoint from: {}'.format(path))
-        torch_checkpoint = torch.load(path)
+        torch_checkpoint = torch.load(path, map_location=map_location)
         self.model.load_state_dict(torch_checkpoint['model_state_dict'])
         return checkpoint
