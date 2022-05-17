@@ -65,7 +65,9 @@ if __name__ == "__main__":
         if cfg['generation']['mode'] == 'test_texture':
             path_surface = path
         print(scan_name)
-        mesh = trimesh.load(path_surface, force = 'mesh')
+        mesh = trimesh.load(path_surface)
+        
+        print(type(mesh))
         
         # create new uncolored mesh for color prediction
         pred_mesh = trimesh.Trimesh(mesh.vertices, mesh.faces)
