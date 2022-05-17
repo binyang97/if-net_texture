@@ -55,7 +55,7 @@ class VoxelizedDataset(Dataset):
         full_file_name = os.path.splitext(path.split(os.sep)[-1])[0]
         
         voxel_path = os.path.join(self.path, split, gt_file_name,\
-                   '{}_voxelized_colored_point_cloud_res{}_points{}_bbox{}.npz'\
+                   '.{}_voxelized_colored_point_cloud_res{}_points{}_bbox{}.npz'\
             .format(full_file_name, self.res, self.pointcloud_samples, self.bbox_str))
 
 
@@ -76,7 +76,7 @@ class VoxelizedDataset(Dataset):
 
 
         rgb_samples_path = os.path.join(self.path, split, gt_file_name,\
-                   '{}_normalized_color_samples{}_bbox{}.npz' \
+                   '{}_color_samples{}_bbox{}.npz' \
                    .format(gt_file_name, self.num_gt_rgb_samples, self.bbox_str))
                    
         rgb_samples_npz = np.load(rgb_samples_path)
