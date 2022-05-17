@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     net = model.get_models()[cfg['model']]()
 
-    dataloader = dataloader.VoxelizedDataset('small_test', cfg, generation = True, num_workers=0).get_loader()
+    dataloader = dataloader.VoxelizedDataset('test_texture', cfg, generation = True, num_workers=0).get_loader()
 
     gen = Generator(net, cfg)
 
@@ -77,7 +77,9 @@ if __name__ == "__main__":
         
         # colors will be attached per vertex
         # subdivide in order to have high enough number of vertices for good texture representation
-        pred_mesh = pred_mesh.subdivide().subdivide()
+        #pred_mesh = pred_mesh.subdivide().subdivide()
+        
+        pred_mesh = pred_mesh.subdivide()
 
         pred_verts_gird_coords = utils.to_grid_sample_coords( pred_mesh.vertices, cfg['data_bounding_box'])
         pred_verts_gird_coords = torch.tensor(pred_verts_gird_coords).unsqueeze(0)

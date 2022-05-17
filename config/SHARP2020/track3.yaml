@@ -2,8 +2,8 @@ input_type: pointcloud
 input_resolution: 128
 input_points_number: 100000
 model: TEXR
-folder_name: ./pretrained_texture_regular
-data_path: ./track2_testdata/track2
+folder_name: ./pretrained_texture_regular_lessvertices
+data_path: ../SHARP_data/track3
 #data_path: ./track2_testdata/track3
 data_bounding_box: [-0.8, 0.8, -0.15, 2.1, -0.8, 0.8]
 split_file: ../SHARP_data/track2/split.npz
