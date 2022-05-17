@@ -84,7 +84,8 @@ def voxelized_colored_pointcloud_sampling(tmp_path):
         # encoding is done by sampling a pointcloud and voxelizing it (into discrete grid for 3D CNN usage)
         
         if test:
-            full_shape = trimesh.load(generation_mesh_fullpath)
+            #full_shape = trimesh.load(generation_mesh_fullpath)
+            full_shape = trimesh.load(partial_mesh_path)
         else:
             dir = os.path.normpath(os.path.dirname(partial_mesh_path))
             dir_comp = dir.split(os.sep)
