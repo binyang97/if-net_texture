@@ -36,6 +36,18 @@ class VoxelizedDataset(Dataset):
             self.voxelized_pointcloud = True
             self.pointcloud_samples = cfg['input_points_number']
         self.cfg = cfg
+        path = self.data[0]
+
+        path = os.path.normpath(path)
+        challange = path.split(os.sep)[-4]
+        split = path.split(os.sep)[-3]
+        gt_file_name = path.split(os.sep)[-2]
+        full_file_name = os.path.splitext(path.split(os.sep)[-1])[0]
+        print("path: ", path)
+        print("challenge: ", challange)
+        print("split: ", split)
+        print("gt_file_name: ", gt_file_name)
+        print("full_file_name: ", full_file_name)
 
 
 
@@ -67,7 +79,7 @@ class VoxelizedDataset(Dataset):
         S = np.reshape(S, (self.res,)*3)
         input = np.array([R,G,B,S])
 
-        if self.mode == 'test' or self.mode == 'test_texture':
+        if self.mode == 'test' or self.mode == 'test_texture' or self.mode == 'small_test':
             path =glob(self.cfg['preprocessing']['scale_back_obj']['generation_path'] + self.cfg['generation']['generation_files_regex'] + gt_file_name + "/*/*.obj")[-1]
             return { 'inputs': np.array(input, dtype=np.float32), 'path' : path}
 

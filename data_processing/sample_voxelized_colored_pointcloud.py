@@ -79,13 +79,17 @@ def voxelized_colored_pointcloud_sampling(tmp_path):
         R[idx] = colors[:,0]
         G[idx] = colors[:,1]
         B[idx] = colors[:,2]
+        
+        R = R[R>=0]
+        G = G[G>=0]
+        B = B[B>=0]
 
         # encode uncolorized, complete shape of object (at inference time obtained from IF-Nets surface reconstruction)
         # encoding is done by sampling a pointcloud and voxelizing it (into discrete grid for 3D CNN usage)
         
         if test:
-            #full_shape = trimesh.load(generation_mesh_fullpath)
-            full_shape = trimesh.load(partial_mesh_path)
+            full_shape = trimesh.load(generation_mesh_fullpath)
+            #full_shape = trimesh.load(partial_mesh_path)
         else:
             dir = os.path.normpath(os.path.dirname(partial_mesh_path))
             dir_comp = dir.split(os.sep)

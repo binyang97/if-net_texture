@@ -24,12 +24,12 @@ if __name__ == "__main__":
 
     net = model.get_models()[cfg['model']]()
 
-    dataloader = dataloader.VoxelizedDataset('test_texture', cfg, generation = True, num_workers=0).get_loader()
+    dataloader = dataloader.VoxelizedDataset('small_test', cfg, generation = True, num_workers=0).get_loader()
 
     gen = Generator(net, cfg)
 
 
-    out_path = 'experiments/{}/evaluation_{}/Track_2/eval'.format(cfg['folder_name'], gen.checkpoint)
+    out_path = 'experiments/{}/evaluation_{}/Track_2_test/eval'.format(cfg['folder_name'], gen.checkpoint)
 
 
     for data in tqdm(dataloader):
@@ -62,12 +62,15 @@ if __name__ == "__main__":
 
 
         path_surface = os.path.join(cfg['data_path'], split, gt_file_name, gt_file_name + '_normalized.obj')
-        if cfg['generation']['mode'] == 'test_texture':
+        if cfg['generation']['mode'] == 'test_texture' or cfg['generation']['mode'] == 'small_test':
             path_surface = path
         print(scan_name)
+        
+        #if not os.path.exists(path _surface):
+            
         mesh = trimesh.load(path_surface)
         
-        print(type(mesh))
+        #print(type(mesh))
         
         # create new uncolored mesh for color prediction
         pred_mesh = trimesh.Trimesh(mesh.vertices, mesh.faces)
