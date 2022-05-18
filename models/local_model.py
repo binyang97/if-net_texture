@@ -303,18 +303,18 @@ class TEXR(nn.Module):
 
     def __init__(self, hidden_dim=256):
         super(TEXR, self).__init__()
-
-        self.conv_in = nn.Conv3d(4, 16, 3, padding=1, padding_mode='border')  # out: 256 ->m.p. 128
-        self.conv_0 = nn.Conv3d(16, 32, 3, padding=1, padding_mode='border')  # out: 128
-        self.conv_0_1 = nn.Conv3d(32, 32, 3, padding=1, padding_mode='border')  # out: 128 ->m.p. 64
-        self.conv_1 = nn.Conv3d(32, 64, 3, padding=1, padding_mode='border')  # out: 64
-        self.conv_1_1 = nn.Conv3d(64, 64, 3, padding=1, padding_mode='border')  # out: 64 -> mp 32
-        self.conv_2 = nn.Conv3d(64, 128, 3, padding=1, padding_mode='border')  # out: 32
-        self.conv_2_1 = nn.Conv3d(128, 128, 3, padding=1, padding_mode='border')  # out: 32 -> mp 16
-        self.conv_3 = nn.Conv3d(128, 128, 3, padding=1, padding_mode='border')  # out: 16
-        self.conv_3_1 = nn.Conv3d(128, 128, 3, padding=1, padding_mode='border')  # out: 16 -> mp 8
-        self.conv_4 = nn.Conv3d(128, 128, 3, padding=1, padding_mode='border')  # out: 8
-        self.conv_4_1 = nn.Conv3d(128, 128, 3, padding=1, padding_mode='border')  # out: 8
+        self.padding_mode = 'replicate'
+        self.conv_in = nn.Conv3d(4, 16, 3, padding=1, padding_mode=self.padding_mode)  # out: 256 ->m.p. 128
+        self.conv_0 = nn.Conv3d(16, 32, 3, padding=1, padding_mode=self.padding_mode)  # out: 128
+        self.conv_0_1 = nn.Conv3d(32, 32, 3, padding=1, padding_mode=self.padding_mode)  # out: 128 ->m.p. 64
+        self.conv_1 = nn.Conv3d(32, 64, 3, padding=1, padding_mode=self.padding_mode)  # out: 64
+        self.conv_1_1 = nn.Conv3d(64, 64, 3, padding=1, padding_mode=self.padding_mode)  # out: 64 -> mp 32
+        self.conv_2 = nn.Conv3d(64, 128, 3, padding=1, padding_mode=self.padding_mode)  # out: 32
+        self.conv_2_1 = nn.Conv3d(128, 128, 3, padding=1, padding_mode=self.padding_mode)  # out: 32 -> mp 16
+        self.conv_3 = nn.Conv3d(128, 128, 3, padding=1, padding_mode=self.padding_mode)  # out: 16
+        self.conv_3_1 = nn.Conv3d(128, 128, 3, padding=1, padding_mode=self.padding_mode)  # out: 16 -> mp 8
+        self.conv_4 = nn.Conv3d(128, 128, 3, padding=1, padding_mode=self.padding_mode)  # out: 8
+        self.conv_4_1 = nn.Conv3d(128, 128, 3, padding=1, padding_mode=self.padding_mode)  # out: 8
 
         feature_size = (4 +  16 + 32 + 64 + 128 + 128 + 128) * 7 + 3
         self.fc_0 = nn.Conv1d(feature_size, hidden_dim * 2, 1)
