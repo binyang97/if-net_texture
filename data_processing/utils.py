@@ -50,13 +50,16 @@ def barycentric_coordinates(p, q, u, v):
 def as_mesh(scene_or_mesh):
     if isinstance(scene_or_mesh, trimesh.Scene):
         meshes = scene_or_mesh.dump()
-        mesh_max_size = 0
         for mesh in meshes:
-            size = len(mesh.faces)
-            if size > mesh_max_size:
-                mesh_selected = mesh
-                mesh_max_size = size
-        mesh = mesh_selected
+            color = mesh.visual.uv
+            if color.shape[0] != 0:
+              mesh_selected = mesh
+            #else:
+              #print('Error: The mesh has no color')
+        try:      
+            mesh = mesh_selected
+        except:
+            print("Error")
         print("Thats Scene!!!!!!!!!!!!!!!!!!!!!!")
         #mesh = trimesh.Trimesh(vertices = m.vertices, faces = m.faces)
     else:

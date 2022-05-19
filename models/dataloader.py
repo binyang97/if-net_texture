@@ -52,11 +52,17 @@ class VoxelizedDataset(Dataset):
         challange = path.split(os.sep)[-4]
         split = path.split(os.sep)[-3]
         gt_file_name = path.split(os.sep)[-2]
-        full_file_name = os.path.splitext(path.split(os.sep)[-1])[0]
+        full_file_name = path.split(os.sep)[-1][:-7]
         
+        print(full_file_name)
+        #if self.mode =='test_texture':
         voxel_path = os.path.join(self.path, split, gt_file_name,\
-                   '{}_voxelized_colored_point_cloud_res{}_points{}_bbox{}.npz'\
+            '{}_voxelized_colored_point_cloud_res{}_points{}_bbox{}.npz'\
             .format(full_file_name, self.res, self.pointcloud_samples, self.bbox_str))
+        #else:
+          #voxel_path = os.path.join(self.path, split, gt_file_name,\
+                    # '{}._voxelized_colored_point_cloud_res{}_points{}_bbox{}.npz'\
+              ##.format(full_file_name, self.res, self.pointcloud_samples, self.bbox_str))
 
 
         R = np.load(voxel_path)['R']
@@ -74,12 +80,12 @@ class VoxelizedDataset(Dataset):
             path =glob(self.cfg['preprocessing']['scale_back_obj']['generation_path'] + self.cfg['generation']['generation_files_regex'] + gt_file_name + "/*/*.obj")[-1]
             return { 'inputs': np.array(input, dtype=np.float32), 'path' : path}
 
-
-        rgb_samples_path = os.path.join(self.path, split, gt_file_name,\
+        split_gt = split[:-7] + "gt"
+        rgb_samples_path = os.path.join(self.path, split_gt, gt_file_name,\
                    '{}_color_samples{}_bbox{}.npz' \
                    .format(gt_file_name, self.num_gt_rgb_samples, self.bbox_str))
                    
-        rgb_samples_npz = np.load(rgb_samples_path)
+        rgb_samples_npz = np.load(rgb_samples_path, allow_pickle = True)
         rgb_coords = rgb_samples_npz['grid_coords']
         rgb_values = rgb_samples_npz['colors']
         subsample_indices = np.random.randint(0, len(rgb_values), self.sample_points_per_object)

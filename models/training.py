@@ -107,7 +107,7 @@ class Trainer(object):
                         
                     self.writer.add_scalar('val loss batch avg', val_loss, epoch)
 
-            for ib, batch in train_data_loader:
+            for ib, batch in enumerate(train_data_loader):
                 loss = self.train_step(batch)
                 print("epoch: {}, batch: {}, Current loss: {}".format(epoch, ib, loss))
                 sum_loss += loss
@@ -119,7 +119,7 @@ class Trainer(object):
                     sum_loss += train_loss_from_others.item()
                 sum_loss = sum_loss/self.world_size
             else:
-                dist.send(tensor=torch.Tensor([sum_loss], dst=0))
+                dist.send(tensor=torch.Tensor([sum_loss]), dst=0)
             dist.barrier()
             if not self.rank:
                 self.writer.add_scalar('training loss last batch', loss, epoch)
