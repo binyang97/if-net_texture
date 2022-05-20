@@ -74,5 +74,11 @@ class Generator(object):
             path = self.checkpoint_path + 'checkpoint_epoch_{}.tar'.format(checkpoint)
         print('Loaded checkpoint from: {}'.format(path))
         torch_checkpoint = torch.load(path)
-        self.model.load_state_dict(torch_checkpoint['model_state_dict'])
+        checkpoint_new = dict([])
+        for key in torch_checkpoint['model_state_dict'].keys():
+            new_key = key[7:]
+            checkpoint_new[new_key] = torch_checkpoint['model_state_dict'][key]
+            
+          
+        self.model.load_state_dict(checkpoint_new)
         return checkpoint
