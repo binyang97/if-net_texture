@@ -14,8 +14,8 @@ preprocessing:
   sample_number: 100000
  scale_back_obj:
   mode: test
-  generation_path: /cluster/project/infk/courses/252-0579-00L/group20/SHARP_data/
-  #generation_path: /cluster/project/infk/courses/252-0579-00L/group20/if_net/experiments/iVoxels_dist-0.5_0.5_sigmas-0.1_0.01_v128_mShapeNet128Vox_regular/
+  #generation_path: /cluster/project/infk/courses/252-0579-00L/group20/SHARP_data/
+  generation_path: /cluster/project/infk/courses/252-0579-00L/group20/if_net/experiments/iVoxels_dist-0.5_0.5_sigmas-0.1_0.01_v128_mShapeNet128Vox_regular/
   #generation_path: ./experiments/ShapeNet32Vox
   input_files_regex: /*/*/*/*/*.off
  voxelized_colored_pointcloud_sampling:
@@ -31,8 +31,8 @@ generation:
  batch_points: 800000
  mode: test_texture
  retrieval_threshold: 0.5
- input_files_regex: /*/*/*/*/*.obj
- generation_files_regex: /track5/
- #generation_files_regex: /evaluation_41_@128/generation/
+ input_files_regex: /*/*/*/*/*_normal.obj
+ #generation_files_regex: /track5/
+ generation_files_regex: /evaluation_41_@128/generation/
 
 

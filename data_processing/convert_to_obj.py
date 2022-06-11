@@ -29,7 +29,7 @@ def scale_back(parameters):
     
     mesh_partial = trimesh.load(partial_mesh_fullpath)
     
-    output_fullpath = os.path.splitext(generation_mesh_fullpath)[0] + "_scaled_back" + ".obj"
+    output_fullpath = os.path.splitext(generation_mesh_fullpath)[0] + "_normal" + ".obj"
     if os.path.exists(output_fullpath):
         mesh = trimesh.load(output_fullpath)
         #print(type(mesh))
@@ -40,9 +40,9 @@ def scale_back(parameters):
         else:
             print("File exists but is not Mesh, it will retry")
     
-    OUTPUT = True
+    OUTPUT = False
     while OUTPUT:
-
+        print("resized")
         total_size = (mesh_partial.bounds[1] - mesh_partial.bounds[0]).max()
         centers = (mesh_partial.bounds[1] + mesh_partial.bounds[0]) /2
   
